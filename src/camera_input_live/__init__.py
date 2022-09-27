@@ -26,7 +26,7 @@ def camera_input_live(
     """
     Add a descriptive docstring
     """
-    b64_data = _component_func(
+    b64_data: Optional[str] = _component_func(
         height=height,
         width=width,
         debounce=debounce,
@@ -36,12 +36,14 @@ def camera_input_live(
         key=key,
     )
 
-    if b64_data is not None:
-        raw_data = b64_data.split(",")[1]  # Strip the data: type prefix
+    if b64_data is None:
+        return None
 
-        component_value = BytesIO(base64.b64decode(raw_data))
+    raw_data = b64_data.split(",")[1]  # Strip the data: type prefix
 
-        return component_value
+    component_value = BytesIO(base64.b64decode(raw_data))
+
+    return component_value
 
 
 def main():
