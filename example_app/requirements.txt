@@ -1,0 +1,2 @@
+streamlit-camera-input-live
+opencv-python-headless
