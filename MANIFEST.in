@@ -1,0 +1,3 @@
+recursive-include src/camera_input_live/frontend *
+include README.md
+include LICENSE
