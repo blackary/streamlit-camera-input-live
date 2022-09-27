@@ -19,4 +19,5 @@ setuptools.setup(
     classifiers=[],
     python_requires=">=3.7",
     install_requires=["streamlit>=1.2", "jinja2"],
+    url="https://github.com/blackary/streamlit-camera-input-live",
 )
