@@ -18,7 +18,11 @@ function onRender(event) {
   // Only run the render code the first time the component is loaded.
   if (!window.rendered) {
     // You most likely want to get the data passed in like this
-    const {height, width, debounce} = event.detail.args
+    const {height, width, debounce, showControls, startLabel, stopLabel} = event.detail.args
+
+    if (showControls) {
+      Streamlit.setFrameHeight(45)
+    }
 
     if (isNaN(height)) {
       height = width / (4/3);
@@ -26,15 +30,19 @@ function onRender(event) {
 
     let video = document.getElementById('video');
     let canvas = document.getElementById('canvas');
+    let button = document.getElementById('button');
+
+    let stopped = false;
 
     video.setAttribute('width', width);
     video.setAttribute('height', height);
     canvas.setAttribute('width', width);
     canvas.setAttribute('height', height);
 
-    console.log(height, width)
-
     function takepicture() {
+      if (stopped) {
+        return;
+      }
       let context = canvas.getContext('2d');
       canvas.width = width;
       canvas.height = height;
@@ -42,6 +50,36 @@ function onRender(event) {
 
       var data = canvas.toDataURL('image/png');
       sendValue(data);
+    }
+
+
+    function stopVideo() {
+      video.pause();
+      video.srcObject.getTracks()[0].stop();
+      stopped = true;
+    }
+
+    function startVideo() {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function(stream) {
+          video.srcObject = stream;
+          video.play();
+        })
+        .catch(function(err) {
+          console.log("An error occurred: " + err);
+        });
+    }
+
+    function toggleVideo() {
+      if (stopped) {
+        startVideo();
+        stopped = false;
+      } else {
+        stopVideo();
+        stopped = true;
+      }
+      // Toggle the button text
+      button.textContent = stopped ? startLabel : stopLabel;
     }
 
     if (navigator.mediaDevices.getUserMedia) {
@@ -55,6 +93,9 @@ function onRender(event) {
           console.error(error);
         });
     }
+
+    button.addEventListener('click', toggleVideo);
+    button.textContent = stopped ? startLabel : stopLabel;
 
     takepicture();
     setInterval(takepicture, debounce);

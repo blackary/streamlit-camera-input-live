@@ -10,23 +10,11 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
+    <button id="button">Stop</button>
+    <div class="padding"></div>
     <div id="container">
       <video id="video" autoplay="true"></video>
       <canvas id="canvas"> </canvas>
     </div>
-    <script>
-      var video = document.querySelector("#videoElement");
-
-      if (navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices
-          .getUserMedia({ video: true })
-          .then(function (stream) {
-            video.srcObject = stream;
-          })
-          .catch(function (error) {
-            console.log("Something went wrong!");
-          });
-      }
-    </script>
   </body>
 </html>

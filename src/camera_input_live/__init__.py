@@ -19,6 +19,9 @@ def camera_input_live(
     height: int = 530,
     width: int = 704,
     key: Optional[str] = None,
+    showControls: bool = True,
+    startLabel: str = "Start capturing",
+    stopLabel: str = "Pause capturing",
 ) -> Optional[BytesIO]:
     """
     Add a descriptive docstring
@@ -27,6 +30,9 @@ def camera_input_live(
         height=height,
         width=width,
         debounce=debounce,
+        showControls=showControls,
+        startLabel=startLabel,
+        stopLabel=stopLabel,
         key=key,
     )
 
@@ -40,7 +46,8 @@ def camera_input_live(
 
 def main():
     st.write("## Example")
-    image = camera_input_live()
+
+    image = camera_input_live(showControls=True)
 
     if image is not None:
         st.image(image)
