@@ -1,3 +1,5 @@
+import base64
+from io import BytesIO
 from pathlib import Path
 from typing import Optional
 
@@ -8,28 +10,40 @@ import streamlit.components.v1 as components
 # and that the code to display that component is in the "frontend" folder
 frontend_dir = (Path(__file__).parent / "frontend").absolute()
 _component_func = components.declare_component(
-	"camera_input_live", path=str(frontend_dir)
+    "camera_input_live", path=str(frontend_dir)
 )
 
-# Create the python function that will be called
+
 def camera_input_live(
+    debounce: int = 1000,
+    height: int = 530,
+    width: int = 704,
     key: Optional[str] = None,
-):
+) -> Optional[BytesIO]:
     """
     Add a descriptive docstring
     """
-    component_value = _component_func(
+    b64_data = _component_func(
+        height=height,
+        width=width,
+        debounce=debounce,
         key=key,
     )
 
-    return component_value
+    if b64_data is not None:
+        raw_data = b64_data.split(",")[1]  # Strip the data: type prefix
+
+        component_value = BytesIO(base64.b64decode(raw_data))
+
+        return component_value
 
 
 def main():
     st.write("## Example")
-    value = camera_input_live()
+    image = camera_input_live()
 
-    st.write(value)
+    if image is not None:
+        st.image(image)
 
 
 if __name__ == "__main__":

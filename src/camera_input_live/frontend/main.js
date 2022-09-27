@@ -7,6 +7,8 @@ function sendValue(value) {
   Streamlit.setComponentValue(value)
 }
 
+
+
 /**
  * The component's render function. This will be called immediately after
  * the component is initially loaded, and then again every time the
@@ -16,10 +18,46 @@ function onRender(event) {
   // Only run the render code the first time the component is loaded.
   if (!window.rendered) {
     // You most likely want to get the data passed in like this
-    // const {input1, input2, input3} = event.detail.args
+    const {height, width, debounce} = event.detail.args
 
-    // You'll most likely want to pass some data back to Python like this
-    // sendValue({output1: "foo", output2: "bar"})
+    if (isNaN(height)) {
+      height = width / (4/3);
+    }
+
+    let video = document.getElementById('video');
+    let canvas = document.getElementById('canvas');
+
+    video.setAttribute('width', width);
+    video.setAttribute('height', height);
+    canvas.setAttribute('width', width);
+    canvas.setAttribute('height', height);
+
+    console.log(height, width)
+
+    function takepicture() {
+      let context = canvas.getContext('2d');
+      canvas.width = width;
+      canvas.height = height;
+      context.drawImage(video, 0, 0, width, height);
+
+      var data = canvas.toDataURL('image/png');
+      sendValue(data);
+    }
+
+    if (navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then(function (stream) {
+          video.srcObject = stream;
+        })
+        .catch(function (error) {
+          console.log("Something went wrong!");
+          console.error(error);
+        });
+    }
+
+    takepicture();
+    setInterval(takepicture, debounce);
     window.rendered = true
   }
 }
@@ -28,5 +66,5 @@ function onRender(event) {
 Streamlit.events.addEventListener(Streamlit.RENDER_EVENT, onRender)
 // Tell Streamlit that the component is ready to receive events
 Streamlit.setComponentReady()
-// Render with the correct height, if this is a fixed-height component
-Streamlit.setFrameHeight(100)
+// Don't actually need to display anything, so set the height to 0
+Streamlit.setFrameHeight(0)
