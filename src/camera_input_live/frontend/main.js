@@ -18,7 +18,7 @@ function onRender(event) {
   // Only run the render code the first time the component is loaded.
   if (!window.rendered) {
     // You most likely want to get the data passed in like this
-    const {height, width, debounce, showControls, startLabel, stopLabel} = event.detail.args
+    const {height, width, debounce, showControls, startLabel, stopLabel, defaultRearCamera} = event.detail.args
 
     if (showControls) {
       Streamlit.setFrameHeight(45)
@@ -34,7 +34,7 @@ function onRender(event) {
     let switchButton = document.getElementById('switchButton');
 
     let stopped = false;
-    let facingMode = 'user';
+    let facingMode = defaultRearCamera ? 'environment' : 'user';
 
     video.setAttribute('width', width);
     video.setAttribute('height', height);
