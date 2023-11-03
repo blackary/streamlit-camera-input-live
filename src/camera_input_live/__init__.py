@@ -41,9 +41,7 @@ def camera_input_live(
 
     raw_data = b64_data.split(",")[1]  # Strip the data: type prefix
 
-    component_value = BytesIO(base64.b64decode(raw_data))
-
-    return component_value
+    return BytesIO(base64.b64decode(raw_data))
 
 
 def main():
