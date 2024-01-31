@@ -7,7 +7,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setuptools.setup(
     name="streamlit-camera-input-live",
-    version="0.2.0",
+    version="0.3.0",
     author="Zachary Blackwood",
     author_email="zachary@streamlit.io",
     description="Alternative version of st.camera_input which returns the webcam images live, without any button press needed",
