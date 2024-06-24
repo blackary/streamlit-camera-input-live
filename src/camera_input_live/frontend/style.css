@@ -24,8 +24,16 @@ button {
   background-color: rgb(255, 255, 255);
   border: 1px solid rgba(49, 51, 63, 0.2);
   cursor: pointer;
+}
+
+#stopButton {
   position: absolute;
   left: 0;
+}
+
+#switchButton {
+  position: absolute;
+  left: 150px;
 }
 
 button:hover {
