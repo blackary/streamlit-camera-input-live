@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import streamlit as st
+
 from camera_input_live import camera_input_live
 
 "# Streamlit camera input live Demo"
