@@ -22,6 +22,7 @@ def camera_input_live(
     show_controls: bool = True,
     start_label: str = "Start capturing",
     stop_label: str = "Pause capturing",
+    default_rear_camera: bool = False,
 ) -> Optional[BytesIO]:
     """
     Add a descriptive docstring
@@ -33,6 +34,7 @@ def camera_input_live(
         showControls=show_controls,
         startLabel=start_label,
         stopLabel=stop_label,
+        defaultRearCamera=default_rear_camera,
         key=key,
     )
 
