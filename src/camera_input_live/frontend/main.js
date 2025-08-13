@@ -18,7 +18,7 @@ function onRender(event) {
   // Only run the render code the first time the component is loaded.
   if (!window.rendered) {
     // You most likely want to get the data passed in like this
-    const {height, width, debounce, showControls, startLabel, stopLabel} = event.detail.args
+    const {height, width, debounce, showControls, startLabel, stopLabel, defaultRearCamera} = event.detail.args
 
     if (showControls) {
       Streamlit.setFrameHeight(45)
@@ -30,9 +30,11 @@ function onRender(event) {
 
     let video = document.getElementById('video');
     let canvas = document.getElementById('canvas');
-    let button = document.getElementById('button');
+    let stopButton = document.getElementById('stopButton');
+    let switchButton = document.getElementById('switchButton');
 
     let stopped = false;
+    let facingMode = defaultRearCamera ? 'environment' : 'user';
 
     video.setAttribute('width', width);
     video.setAttribute('height', height);
@@ -60,7 +62,7 @@ function onRender(event) {
     }
 
     function startVideo() {
-      navigator.mediaDevices.getUserMedia({ video: true })
+      navigator.mediaDevices.getUserMedia({ video: { height, width, facingMode } })
         .then(function(stream) {
           video.srcObject = stream;
           video.play();
@@ -79,23 +81,27 @@ function onRender(event) {
         stopped = true;
       }
       // Toggle the button text
-      button.textContent = stopped ? startLabel : stopLabel;
+      stopButton.textContent = stopped ? startLabel : stopLabel;
     }
 
     if (navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then(function (stream) {
-          video.srcObject = stream;
-        })
-        .catch(function (error) {
-          console.log("Something went wrong!");
-          console.error(error);
-        });
+      startVideo();
     }
 
-    button.addEventListener('click', toggleVideo);
-    button.textContent = stopped ? startLabel : stopLabel;
+    stopButton.addEventListener('click', toggleVideo);
+    stopButton.textContent = stopped ? startLabel : stopLabel;
+
+    function toggleSource() {
+      if (facingMode == 'user') {
+        facingMode = 'environment';
+      } else {
+        facingMode = 'user';
+      }
+      stopVideo();
+      startVideo();
+    }
+
+    switchButton.addEventListener('click', toggleSource);
 
     takepicture();
     setInterval(takepicture, debounce);
